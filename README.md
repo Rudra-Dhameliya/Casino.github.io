@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino Blackjack</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+.container {
+    width: 50%;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+input[type="text"] {
+    padding: 10px;
+    width: 95%;
+    font-size: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+#result {
+font-size: 30px;
+font-weight: bold;
+}
+button:hover {
+    background-color: #0056b3;
+}   
+footer {
+    background-color: #333;
+    color: #fff;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Enter Your Cards</h2>
+        <form id="numberForm" onsubmit="submitNumbers(); return false;">
+            <input type="text" id="number1" placeholder="Your Card 1" onkeydown="moveToNext(event, 'number2')">
+            <input type="text" id="number2" placeholder="Your Card 2" onkeydown="moveToNext(event, 'number3')">
+            <h2>Enter Dealer's Card</h2>
+            <input type="text" id="number3" placeholder="Dealer's Card">
+            <button type="submit">Submit</button>
+        </form>
+        <br></br>
+        <div id="result"></div>
+    </div>
+</body>
+<script>
+    function moveToNext(event, nextElementId) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById(nextElementId).focus();
+    }
+}
+function submitNumbers() {
+    var number1 = document.getElementById('number1').value.trim().toUpperCase();
+    var number2 = document.getElementById('number2').value.trim().toUpperCase();
+    var number3 = document.getElementById('number3').value.trim().toUpperCase();
+
+    // Replace text inputs with numeric values
+    if (number1 === "K" || number1 === "Q" || number1 === "J") {
+        number1 = "10";
+    } else if (number1 === "A") {
+        number1 = "11";
+    }
+
+    if (number2 === "K" || number2 === "Q" || number2 === "J") {
+        number2 = "10";
+    } else if (number2 === "A") {
+        number2 = "11";
+    }
+
+    if (number3 === "K" || number3 === "Q" || number3 === "J") {
+        number3 = "10";
+    } else if (number3 === "A") {
+        number3 = "11";
+    }
+
+    // Check if all inputs are numeric
+    if (isNaN(number1) || isNaN(number2) || isNaN(number3)) {
+        alert('Please enter valid values for all three numbers.');
+        return;
+    }
+
+    var sum = parseInt(number1) + parseInt(number2);
+
+    if (sum === 8) {
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else {
+            document.getElementById('result').innerHTML = 'You entered: ' + number1 + ', ' + number2 + ', ' + number3;
+        }
+    } else {
+        document.getElementById('result').innerHTML = 'You entered: ' + number1 + ', ' + number2 + ', ' + number3;
+    }
+
+    if (sum === 9) {
+        if (parseInt(number3) === 2) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else if (parseInt(number3) >= 3 && parseInt(number3) <= 6) {
+            document.getElementById('result').innerHTML = 'First Double and After More!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else {
+            document.getElementById('result').innerHTML = 'Invalid number for number3.';
+        }
+    }
+    if (sum === 10) {
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 9) {
+            document.getElementById('result').innerHTML = 'First Double and After More!';
+        } else if (parseInt(number3) === 10 || parseInt(number3) === 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else {
+            document.getElementById('result').innerHTML = 'Invalid number for number3.';
+        }
+    }
+    if (sum === 11) {
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'First Double and After More!';
+        } else {
+            document.getElementById('result').innerHTML = 'Invalid number for number3.';
+        }
+    }
+    if (sum === 12) {
+        if (parseInt(number3) >= 2 && parseInt(number3) < 4) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else if (parseInt(number3) >= 4 && parseInt(number3) <= 6) {
+            document.getElementById('result').innerHTML = 'Enough!';
+        } else {
+            document.getElementById('result').innerHTML = 'Invalid number for number3.';
+        }
+    }
+    if (sum === 13) {
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 6) {
+            document.getElementById('result').innerHTML = 'Enough!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else {
+            document.getElementById('result').innerHTML = 'Invalid number for number3.';
+        }
+    }
+    if (sum === 14) {
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 6) {
+            document.getElementById('result').innerHTML = 'Enough!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else {
+            document.getElementById('result').innerHTML = 'Invalid number for number3.';
+        }
+    }
+    if (sum === 15) {
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 6) {
+            document.getElementById('result').innerHTML = 'Enough!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else {
+            document.getElementById('result').innerHTML = 'Invalid number for number3.';
+        }
+    }
+    if (sum === 16) {
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 6) {
+            document.getElementById('result').innerHTML = 'Enough!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        } else {
+            document.getElementById('result').innerHTML = 'Invalid number for number3.';
+        }
+    }
+    if (sum === 17) {
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'Enough!';
+        } else {
+            document.getElementById('result').innerHTML = 'Invalid number for number3.';
+        }
+    }
+    if (number1 === '11' && number2 === '2') {
+        if (number3 === '2' || number3 === '3' || number3 === '4') {
+            document.getElementById('result').innerHTML = 'More!';
+        } else if (number3 === '5' || number3 === '6') {
+            document.getElementById('result').innerHTML = 'First Double and After More!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '11' && number2 === '3') {
+        if (number3 === '2' || number3 === '3' || number3 === '4') {
+            document.getElementById('result').innerHTML = 'More!';
+        } else if (number3 === '5' || number3 === '6') {
+            document.getElementById('result').innerHTML = 'First Double and After More!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '11' && number2 === '4') {
+        if (number3 === '2' || number3 === '3') {
+            document.getElementById('result').innerHTML = 'More!';
+        } else if (number3 === '4' || number3 === '5' || number3 === '6') {
+            document.getElementById('result').innerHTML = 'First Double and After More!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '11' && number2 === '5') {
+        if (number3 === '2' || number3 === '3') {
+            document.getElementById('result').innerHTML = 'More!';
+        } else if (number3 === '4' || number3 === '5' || number3 === '6') {
+            document.getElementById('result').innerHTML = 'First Double and After More!';
+        } else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '11' && number2 === '6') {
+        if (number3 === '2') {
+            document.getElementById('result').innerHTML = 'More!';
+        } else if (number3 >= '3' && number3 <= '6') {
+            document.getElementById('result').innerHTML = 'First Double and After More!';
+        } else if (number3 >= '7' && number3 <= '11') {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '11' && number2 === '7') {
+        if (number3 === '2') {
+            document.getElementById('result').innerHTML = 'Enough!';
+        } else if (number3 >= '3' && number3 <= '6') {
+            document.getElementById('result').innerHTML = 'First Double and After More!';
+        } else if (number3 >= '7' && number3 <= '8') {
+            document.getElementById('result').innerHTML = 'Enough!';
+        } else if (number3 === '9' || number3 === '10' || number3 === '11') {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '11' && number2 === '8') {    
+        document.getElementById('result').innerHTML = 'Enough!';       
+    }
+    if (number1 === '2' && number2 === '2') {   
+        if (number3 === '2' || number3 === '3') {
+            document.getElementById('result').innerHTML = 'First Split! and After More!';
+        } 
+        else if (parseInt(number3) >= 4 && parseInt(number3) <= 7) {
+            document.getElementById('result').innerHTML = 'Split!';
+        }
+        else if (parseInt(number3) >= 8 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '3' && number2 === '3') {   
+        if (number3 === '2' || number3 === '3') {
+            document.getElementById('result').innerHTML = 'First Split! and After More!';
+        } 
+        else if (parseInt(number3) >= 4 && parseInt(number3) <= 7) {
+            document.getElementById('result').innerHTML = 'Split!';
+        }
+        else if (parseInt(number3) >= 8 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '4' && number2 === '4') {   
+        if (number3 === '2' || number3 === '3' || number3 === '4') {
+            document.getElementById('result').innerHTML = 'More!';
+        } 
+        else if (number3 === '5' || number3 === '6') {
+            document.getElementById('result').innerHTML = 'First Split and After More!';
+        }
+        else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '5' && number2 === '5') {   
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 9) {
+            document.getElementById('result').innerHTML = 'First Double After and More!';
+        } 
+        else if (number3 === '10' || number3 === '11') {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '6' && number2 === '6') {   
+        if (parseInt(number3) == 2){
+            document.getElementById('result').innerHTML = 'First Double After and More!';
+        }else if (parseInt(number3) >= 3 && parseInt(number3) <= 6) {
+            document.getElementById('result').innerHTML = 'Split!';
+        } 
+        else if (parseInt(number3) >= 7 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '7' && number2 === '7') {   
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 7) {
+            document.getElementById('result').innerHTML = 'Split!';
+        } 
+        else if (parseInt(number3) >= 8 && parseInt(number3) <= 11) {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+    }
+    if (number1 === '8' && number2 === '8') { 
+    document.getElementById('result').innerHTML = 'Split!';
+    }
+    if (number1 === '9' && number2 === '9') {   
+        if (parseInt(number3) >= 2 && parseInt(number3) <= 6) {
+            document.getElementById('result').innerHTML = 'Split!';
+        } 
+        else if (number3 === '7') {
+            document.getElementById('result').innerHTML = 'Enough!';
+        }
+        else if (number3 === '8' || number3 === '9') {
+            document.getElementById('result').innerHTML = 'More!';
+        }
+        else if (number3 === '10' || number3 === '11') {
+            document.getElementById('result').innerHTML = 'Enough!';
+        }
+    }
+    if (number1 === '10' && number2 === '10') { 
+        document.getElementById('result').innerHTML = 'Enough!';
+    }
+    if (number1 === '11' && number2 === '11') { 
+        document.getElementById('result').innerHTML = 'Split!';
+    }
+    if (sum >= 18){
+        document.getElementById('result').innerHTML = 'Enough!'
+    }
+}
+
+</script>
+<footer>
+    Made By Rudra Smurf
+</footer>
+</html>
